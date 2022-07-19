@@ -1,0 +1,87 @@
+import { Anchor, Button, Container, Group, Text } from "@mantine/core";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+const Navbar = () => {
+  const [isLoggedin, setisLoggedin] = useState(false);
+  const navigate = useNavigate();
+
+  const Logout = () => {
+    localStorage.removeItem("xxx-Authorization");
+    setisLoggedin(false);
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("xxx-Authorization")) {
+      setisLoggedin(true);
+    } else {
+      setisLoggedin(false);
+    }
+  }, []);
+  return (
+    <Container my={32}>
+      <nav>
+        <Group position="apart" align="center">
+          <div>
+            <Text
+              component={Link}
+              to="/"
+              color="teal"
+              size="xl"
+              mr={10}
+              sx={(theme) => ({
+                fontFamily: `${theme.headings.fontFamily}`,
+                fontWeight: 700,
+              })}
+            >
+              CloudNotes
+            </Text>
+            <Anchor component={Link} to="/" p={12} size="md">
+              Home
+            </Anchor>
+            <Anchor component={Link} to="/about" p={12} size="md">
+              About
+            </Anchor>
+          </div>
+
+          <div>
+            <Group px={12}>
+              {!isLoggedin && (
+                <Button
+                  variant="light"
+                  component={Link}
+                  to="/login"
+                >
+                  <Text size="md">Login</Text>
+                </Button>
+              )}
+              {!isLoggedin && (
+                <Button
+                  variant="light"
+                  component={Link}
+                  to="/signup"
+                >
+                  <Text size="md">Sign Up</Text>
+                </Button>
+              )}
+
+              {isLoggedin && (
+                <Button
+                  variant="light"
+                  component={Link}
+                  to="/login"
+                  onClick={Logout}
+                >
+                  <Text size="md">Logout</Text>
+                </Button>
+              )}
+            </Group>
+          </div>
+        </Group>
+      </nav>
+    </Container>
+  );
+};
+
+export default Navbar;
