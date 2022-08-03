@@ -1,19 +1,19 @@
-import { Anchor, Button, Container, Group, Text } from "@mantine/core";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
+import { Anchor, Button, Container, Group, Text, Box } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Photo, MessageCircle, Settings } from 'tabler-icons-react';
 const Navbar = () => {
   const [isLoggedin, setisLoggedin] = useState(false);
   const navigate = useNavigate();
 
   const Logout = () => {
-    localStorage.removeItem("xxx-Authorization");
+    localStorage.removeItem('xxx-Authorization');
     setisLoggedin(false);
-    navigate("/login");
+    navigate('/login');
   };
 
   useEffect(() => {
-    if (localStorage.getItem("xxx-Authorization")) {
+    if (localStorage.getItem('xxx-Authorization')) {
       setisLoggedin(true);
     } else {
       setisLoggedin(false);
@@ -43,38 +43,45 @@ const Navbar = () => {
             <Anchor component={Link} to="/about" p={12} size="md">
               About
             </Anchor>
+            <Anchor component={Link} to="/dashboard" p={12} size="md">
+              Dashboard
+            </Anchor>
           </div>
 
           <div>
             <Group px={12}>
               {!isLoggedin && (
-                <Button
-                  variant="light"
-                  component={Link}
-                  to="/login"
-                >
+                <Button variant="light" component={Link} to="/login">
                   <Text size="md">Login</Text>
-                </Button>
-              )}
-              {!isLoggedin && (
-                <Button
-                  variant="light"
-                  component={Link}
-                  to="/signup"
-                >
-                  <Text size="md">Sign Up</Text>
                 </Button>
               )}
 
               {isLoggedin && (
-                <Button
-                  variant="light"
-                  component={Link}
-                  to="/login"
-                  onClick={Logout}
-                >
-                  <Text size="md">Logout</Text>
-                </Button>
+                <>
+                  <Button
+                    component={Link}
+                    to="/profile"
+                    variant="outline"
+                    sx={{
+                      borderRadius: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      aspectRatio: '1/1',
+                    }}
+                  >
+                    <Photo size={20} />
+                  </Button>
+
+                  <Button
+                    variant="light"
+                    component={Link}
+                    to="/"
+                    onClick={Logout}
+                  >
+                    <Text size="md">Logout</Text>
+                  </Button>
+                </>
               )}
             </Group>
           </div>

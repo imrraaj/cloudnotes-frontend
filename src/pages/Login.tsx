@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Anchor,
   Box,
@@ -14,19 +14,19 @@ import {
   TextInput,
   Title,
   Loader,
-} from "@mantine/core";
-import { Alien, At } from "tabler-icons-react";
+} from '@mantine/core';
+import { Alien, At } from 'tabler-icons-react';
 
 const HOST: String = import.meta.env.VITE_BACKEND_URL;
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("xxx-Authorization")) {
-      navigate("/");
+    if (localStorage.getItem('xxx-Authorization')) {
+      navigate('/dashboard');
     }
   }, []);
 
@@ -40,9 +40,9 @@ const Login = () => {
     if (credentials.password.length < 5) return;
 
     const response = await fetch(`${HOST}/auth/login`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         email: credentials.email,
@@ -52,10 +52,10 @@ const Login = () => {
     const json = await response.json();
 
     if (json.error !== undefined) {
-      navigate("/login");
+      navigate('/login');
     } else {
-      await localStorage.setItem("xxx-Authorization", json.authToken);
-      navigate("/");
+      await localStorage.setItem('xxx-Authorization', json.authToken);
+      navigate('/dashboard');
     }
   };
 
@@ -79,7 +79,7 @@ const Login = () => {
       </Title>
 
       <Text color="dimmed" size="sm" align="center" mt={5}>
-        Do not have an account yet?{" "}
+        Do not have an account yet?{' '}
         <Text component={Link} to="/signup" size="sm" color="teal" underline>
           Create account
         </Text>
@@ -114,7 +114,7 @@ const Login = () => {
             <Checkbox label="Remember me" />
           </Group>
           <Button fullWidth mt="xl" type="submit">
-            {loading ? <Loader size="sm" color="#ffffff" /> : "Sign in"}
+            {loading ? <Loader size="sm" color="#ffffff" /> : 'Sign in'}
           </Button>
         </form>
       </Paper>

@@ -1,6 +1,6 @@
-import { createContext, useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router";
-
+import { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import jwt from 'jsonwebtoken';
 export interface NoteWithoutId {
   title: string;
   description: string;
@@ -28,14 +28,14 @@ type Props = {
 const NoteState = ({ children }: Props) => {
   const HOST: string = import.meta.env.VITE_BACKEND_URL;
   const [notes, setNotes] = useState<NoteInterface[]>([]);
-  const [user, setUser] = useState({ username: "", email: "" });
+  const [user, setUser] = useState();
 
   const getNotes = async () => {
     const response = await fetch(`${HOST}/notes/fetchallnotes`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("xxx-Authorization")!,
+        'Content-Type': 'application/json',
+        'auth-token': localStorage.getItem('xxx-Authorization')!,
       },
     });
     const json = await response.json();
@@ -45,10 +45,10 @@ const NoteState = ({ children }: Props) => {
   // Add a Note
   const addNote = async (note: NoteWithoutId) => {
     const response = await fetch(`${HOST}/notes/addnote`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("xxx-Authorization")!,
+        'Content-Type': 'application/json',
+        'auth-token': localStorage.getItem('xxx-Authorization')!,
       },
       body: JSON.stringify({
         title: note.title,
@@ -69,10 +69,10 @@ const NoteState = ({ children }: Props) => {
     setNotes(newNotes);
 
     const response = await fetch(`${HOST}/notes/deletenote/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("xxx-Authorization")!,
+        'Content-Type': 'application/json',
+        'auth-token': localStorage.getItem('xxx-Authorization')!,
       },
     });
     const json = response.json();
