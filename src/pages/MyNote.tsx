@@ -6,7 +6,7 @@ import { Badge, Button, Card, Container, Group, Text } from "@mantine/core";
 
 const MyNote = () => {
   const { id: ID } = useParams() as { id: string };
-  const { notes, getNotes } = useCustomContext();
+  const { myNotes, getNotes } = useCustomContext();
 
   const [currentNote, setCurrentNote] = useState<NoteInterface>({
     title: "",
@@ -16,11 +16,11 @@ const MyNote = () => {
   });
 
   useEffect(() => {
-    if (!notes) {
+    if (!myNotes) {
       //TODO call api for this one note
       return;
     }
-    const x = notes?.filter((n) => n._id === ID);
+    const x = myNotes?.filter((n: NoteInterface) => n._id === ID);
     if (!x) {
       setCurrentNote({
         title: "No Note Found",

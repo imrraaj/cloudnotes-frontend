@@ -12,7 +12,7 @@ import { useCustomContext, NoteWithoutId } from "../context/NoteState";
 import { RichTextEditor } from "@mantine/rte";
 import { showNotification } from "@mantine/notifications";
 
-const AddNote = () => {
+const AddNote = ({ editing = false }: { editing?: boolean }) => {
   const { addNote } = useCustomContext();
 
   const [note, setNote] = useState<NoteWithoutId>({
@@ -72,7 +72,7 @@ const AddNote = () => {
           sx={{
             minHeight: 350,
           }}
-          style={{fontSize:18}}
+          style={{ fontSize: 18 }}
           value={note.description}
           onChange={(e) => setNote({ ...note, description: e })}
           controls={[

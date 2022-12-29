@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useCustomContext } from "../context/NoteState";
+import { NoteInterface, useCustomContext } from "../context/NoteState";
 import Protected from "../components/Protected";
 import Note from "./Note";
 import { Container, Grid, Loader, Stack, Text } from "@mantine/core";
 
-const ShowNotes = () => {
+const ShowNotes = ({ shared = false }: { shared?: boolean }) => {
   const [loading, setLoading] = useState(false);
-  const { notes, getNotes } = useCustomContext();
+  const [notes, setNotes] = useState<NoteInterface[] | null>(null);
+  const { myNotes, sharedNotes, getNotesSharedWithMe } = useCustomContext();
 
   useEffect(() => {
     setLoading(true);
-    getNotes();
+    if (shared) {
+      getNotesSharedWithMe();
+      setNotes(sharedNotes);
+      console.log(sharedNotes);
+    } else {
+      setNotes(myNotes);
+    }
     setLoading(false);
   }, []);
 
@@ -34,7 +41,7 @@ const ShowNotes = () => {
     <Protected>
       <Container py={32}>
         <Grid>
-          {notes.map((noteItem) => {
+          {notes?.map((noteItem) => {
             return (
               <Grid.Col
                 sm={12}

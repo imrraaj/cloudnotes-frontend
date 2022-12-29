@@ -1,8 +1,8 @@
 {
   "name": "cloudnotes",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
@@ -10,13 +10,9 @@
   },
   "dependencies": {
     "@mantine/core": "^4.2.12",
-    "@mantine/dates": "^4.2.12",
-    "@mantine/hooks": "^4.2.12",
     "@mantine/modals": "^4.2.12",
     "@mantine/notifications": "^4.2.12",
     "@mantine/rte": "^4.2.12",
-    "dayjs": "^1.11.3",
-    "jsonwebtoken": "^8.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
@@ -24,10 +20,21 @@
     "tabler-icons-react": "^1.53.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imrraaj/cloudnotes-frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imrraaj/cloudnotes-frontend/issues"
+  },
+  "homepage": "https://github.com/imrraaj/cloudnotes-frontend#readme"
 }

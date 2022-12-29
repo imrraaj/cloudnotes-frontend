@@ -8,16 +8,16 @@ import {
   Text,
   List,
   ThemeIcon,
-} from '@mantine/core';
-import { SimpleGrid, useMantineTheme } from '@mantine/core';
-import { Photo, MessageCircle, Settings } from 'tabler-icons-react';
-import { BsCheck2Circle } from 'react-icons/bs';
-import image from '../../public/vite.svg';
+} from "@mantine/core";
+import { SimpleGrid, useMantineTheme } from "@mantine/core";
+import { Photo, MessageCircle, Settings } from "tabler-icons-react";
+import { BsCheck2Circle } from "react-icons/bs";
+import image from "../../public/vite.svg";
 
 const useStyles = createStyles((theme) => ({
   inner: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: "flex",
+    justifyContent: "space-between",
     paddingTop: theme.spacing.xl * 4,
     paddingBottom: theme.spacing.xl * 4,
   },
@@ -26,26 +26,26 @@ const useStyles = createStyles((theme) => ({
     maxWidth: 480,
     marginRight: theme.spacing.xl * 3,
 
-    [theme.fn.smallerThan('md')]: {
-      maxWidth: '100%',
+    [theme.fn.smallerThan("md")]: {
+      maxWidth: "100%",
       marginRight: 0,
     },
   },
 
   title: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontSize: 44,
     lineHeight: 1.2,
     fontWeight: 900,
 
-    [theme.fn.smallerThan('xs')]: {
+    [theme.fn.smallerThan("xs")]: {
       fontSize: 28,
     },
   },
 
   control: {
-    [theme.fn.smallerThan('xs')]: {
+    [theme.fn.smallerThan("xs")]: {
       flex: 1,
     },
   },
@@ -53,19 +53,19 @@ const useStyles = createStyles((theme) => ({
   image: {
     flex: 1,
 
-    [theme.fn.smallerThan('md')]: {
-      display: 'none',
+    [theme.fn.smallerThan("md")]: {
+      display: "none",
     },
   },
 
   highlight: {
-    position: 'relative',
+    position: "relative",
     backgroundColor: theme.fn.variant({
-      variant: 'light',
+      variant: "light",
       color: theme.primaryColor,
     }).background,
     borderRadius: theme.radius.sm,
-    padding: '4px 12px',
+    padding: "4px 12px",
   },
 }));
 
@@ -78,7 +78,7 @@ export default function HeroBullets() {
           <div className={classes.inner}>
             <div className={classes.content}>
               <Title className={classes.title}>
-                A <span className={classes.highlight}>modern</span> React <br />{' '}
+                A <span className={classes.highlight}>modern</span> React <br />{" "}
                 components library
               </Title>
               <Text color="dimmed" mt="md">
@@ -137,37 +137,45 @@ export default function HeroBullets() {
 export const MOCKDATA = [
   {
     icon: MessageCircle,
-    title: 'Extreme performance',
+    title: "Extreme performance",
     description:
-      'This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit',
+      "This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit",
   },
   {
     icon: MessageCircle,
-    title: 'Privacy focused',
+    title: "Privacy focused",
     description:
-      'People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma',
+      "People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma",
   },
   {
     icon: MessageCircle,
-    title: 'No third parties',
+    title: "No third parties",
     description:
-      'They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves',
+      "They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves",
   },
   {
     icon: MessageCircle,
-    title: 'Secure by default',
+    title: "Secure by default",
     description:
-      'Although it still can’t fly, its jumping power is outstanding, in Alola the mushrooms on Paras don’t grow up quite right',
+      "Although it still can’t fly, its jumping power is outstanding, in Alola the mushrooms on Paras don’t grow up quite right",
   },
   {
     icon: MessageCircle,
-    title: '24/7 Support',
+    title: "24/7 Support",
     description:
-      'Rapidash usually can be seen casually cantering in the fields and plains, Skitty is known to chase around after its own tail',
+      "Rapidash usually can be seen casually cantering in the fields and plains, Skitty is known to chase around after its own tail",
   },
 ];
 
-export function Feature({ icon: Icon, title, description }) {
+export function Feature({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: any;
+  title: string;
+  description: string;
+}) {
   const theme = useMantineTheme();
   return (
     <div>
@@ -194,19 +202,19 @@ const useStyles2 = createStyles((theme) => ({
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontWeight: 900,
     marginBottom: theme.spacing.md,
-    textAlign: 'center',
+    textAlign: "center",
 
-    [theme.fn.smallerThan('sm')]: {
+    [theme.fn.smallerThan("sm")]: {
       fontSize: 28,
-      textAlign: 'left',
+      textAlign: "left",
     },
   },
 
   description: {
-    textAlign: 'center',
+    textAlign: "center",
 
-    [theme.fn.smallerThan('sm')]: {
-      textAlign: 'left',
+    [theme.fn.smallerThan("sm")]: {
+      textAlign: "left",
     },
   },
 }));
@@ -219,11 +227,11 @@ function FeaturesGrid({ data = MOCKDATA }) {
 
   return (
     <Container className={classes.wrapper}>
-      <Title className={classes.title}>{'title'}</Title>
+      <Title className={classes.title}>{"title"}</Title>
 
       <Container size={560} p={0}>
         <Text size="sm" className={classes.description}>
-          {'description'}
+          {"description"}
         </Text>
       </Container>
 
@@ -232,8 +240,8 @@ function FeaturesGrid({ data = MOCKDATA }) {
         cols={3}
         spacing={theme.spacing.xl * 2}
         breakpoints={[
-          { maxWidth: 980, cols: 2, spacing: 'xl' },
-          { maxWidth: 755, cols: 1, spacing: 'xl' },
+          { maxWidth: 980, cols: 2, spacing: "xl" },
+          { maxWidth: 755, cols: 1, spacing: "xl" },
         ]}
       >
         {features}
