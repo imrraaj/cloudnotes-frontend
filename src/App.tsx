@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Signup from "./pages/Signup";
 import About from "./pages/About";
 import NoteState from "./context/NoteState";
-import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import F404 from "./pages/404";
 import Profile from "./pages/Profile";
