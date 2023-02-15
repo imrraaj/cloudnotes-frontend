@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Button,
   Checkbox,
@@ -13,63 +13,42 @@ import {
   Loader,
 } from "@mantine/core";
 import { Alien, At, UserCircle } from "tabler-icons-react";
-
-const HOST = import.meta.env.VITE_BACKEND_URL;
+import { useUser } from "../context/AuthContext";
+import { showNotification } from "@mantine/notifications";
+import api from "../utils/api";
 
 const Signup = () => {
   const [credentials, setCredentials] = useState({
-    email: "",
     username: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const { user, setUser } = useUser();
+  if (user.isLoggedin) {
+    return <Navigate to="/" replace={true} />;
+  }
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (localStorage.getItem("xxx-Authorization")) {
-      navigate("/");
-    }
-  }, []);
-
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const EMAIL_REGEX =
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (!EMAIL_REGEX.test(credentials.email)) return;
-    if (credentials.password.length < 5) return;
-
     setLoading(true);
 
-    const response = await fetch(`${HOST}/auth/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: credentials.email[0],
-        username: credentials.username[0],
-        password: credentials.password[0],
-      }),
+    const { data: response } = await api.post("/auth/signup", {
+      ...credentials,
     });
 
-    const responseJson = await response.json();
-
-    if (responseJson.error !== undefined) {
-      navigate("/login");
+    if (!response.status) {
+      setLoading(false);
+      showNotification({ message: response.message, color: "red" });
     } else {
-      localStorage.setItem("xxx-Authorization", responseJson.authToken);
-      navigate("/");
+      localStorage.setItem("authorization", response.data.token);
+      setUser({ isLoggedin: true, username: credentials.username });
     }
-
-    setLoading(false);
   };
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     setCredentials({
       ...credentials,
-      [e.currentTarget.name]: [e.currentTarget.value],
+      [e.currentTarget.name]: e.currentTarget.value,
     });
   };
 
@@ -93,17 +72,6 @@ const Signup = () => {
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={(e) => handleSubmit(e)}>
-          <TextInput
-            label="Email"
-            icon={<At />}
-            name="email"
-            variant="filled"
-            size="md"
-            placeholder="name@example.com"
-            value={credentials.email}
-            onChange={onChange}
-            required
-          />
           <TextInput
             label="Username"
             icon={<UserCircle />}

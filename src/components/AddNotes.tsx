@@ -1,68 +1,47 @@
-import {
-  MultiSelect,
-  Text,
-  TextInput,
-  Stack,
-  Select,
-  Button,
-  Container,
-} from "@mantine/core";
-import React, { useState } from "react";
-import { useCustomContext, NoteWithoutId } from "../context/NoteState";
+import { Text, TextInput, Select, Button, Container } from "@mantine/core";
+import { useState } from "react";
 import { RichTextEditor } from "@mantine/rte";
+import api from "../utils/api";
 import { showNotification } from "@mantine/notifications";
 
-const AddNote = ({ editing = false }: { editing?: boolean }) => {
-  const { addNote } = useCustomContext();
-
-  const [note, setNote] = useState<NoteWithoutId>({
+const AddNote = () => {
+  const [note, setNote] = useState({
     title: "",
     description: "",
     tag: "default",
   });
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const createNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    showNotification({
-      title: `Note Added!!`,
-      message: "",
-      autoClose: 2000,
-    });
-    addNote(note);
-    setNote({ title: "", description: "", tag: "" });
+    const { data: response } = await api.post("/post/add", { ...note });
+    if (!response.status) {
+      showNotification({ message: response.error });
+    } else {
+      showNotification({ message: "Note added sucessfully!!" });
+    }
   };
 
   const tagData = [
-    { value: "default", label: "Default" },
-    { value: "react", label: "React" },
-    { value: "ng", label: "Angular" },
-    { value: "svelte", label: "Svelte" },
-    { value: "vue", label: "Vue" },
-    { value: "riot", label: "Riot" },
-    { value: "next", label: "Next.js" },
-    { value: "blitz", label: "Blitz.js" },
+    { value: "Default", label: "Default" },
+    { value: "Work", label: "Work" },
+    { value: "Personal", label: "Personal" },
+    { value: "Fun", label: "Fun" },
+    { value: "Important", label: "Important" },
+    { value: "Memo", label: "Memo" },
   ];
 
   return (
     <Container size={720} py={32}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={createNote}>
+        <Text weight="bold">Enter Title here</Text>
         <TextInput
           placeholder="Title"
-          label={
-            <Text size="md" weight="bold">
-              Enter Title here
-            </Text>
-          }
-          size="md"
           id="title"
           name="title"
           value={note.title}
           onChange={(e) => setNote({ ...note, title: e.target.value })}
           minLength={5}
-          my={12}
-          sx={{
-            paddingBlock: 16,
-          }}
+          mb={12}
         />
 
         <Text size="md" weight="bold">
@@ -72,7 +51,6 @@ const AddNote = ({ editing = false }: { editing?: boolean }) => {
           sx={{
             minHeight: 350,
           }}
-          style={{ fontSize: 18 }}
           value={note.description}
           onChange={(e) => setNote({ ...note, description: e })}
           controls={[
@@ -81,7 +59,7 @@ const AddNote = ({ editing = false }: { editing?: boolean }) => {
             ["sup", "sub"],
             ["alignLeft", "alignCenter", "alignRight"],
           ]}
-          placeholder="Type @ or # to see mentions autocomplete"
+          placeholder="You can type here..."
         />
 
         <Select
@@ -91,10 +69,9 @@ const AddNote = ({ editing = false }: { editing?: boolean }) => {
               Select Tag
             </Text>
           }
-          size="md"
           placeholder="Tags"
           searchable
-          defaultValue="default"
+          defaultValue="Default"
           data={tagData}
           onChange={(e) => setNote({ ...note, tag: e! })}
         />
@@ -102,7 +79,7 @@ const AddNote = ({ editing = false }: { editing?: boolean }) => {
         <Button
           type="submit"
           variant="filled"
-          disabled={!note.title}
+          disabled={!(note.title.length > 4)}
           my={16}
           size="md"
         >

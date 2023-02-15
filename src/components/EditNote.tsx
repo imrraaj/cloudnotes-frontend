@@ -13,13 +13,15 @@ import {
 } from "@mantine/core";
 import RichTextEditor from "@mantine/rte";
 import { showNotification } from "@mantine/notifications";
+import api from "../utils/api";
 
 const EditNote = (props: NoteInterface) => {
   const [opened, setOpened] = useState(false);
-  const [note, setNote] = useState<NoteWithoutId>({
+  const [note, setNote] = useState({
     title: props.title,
     description: props.description,
     tag: props.tag,
+    id: props.id,
   });
   const tagData = [
     { value: "default", label: "Default" },
@@ -31,18 +33,25 @@ const EditNote = (props: NoteInterface) => {
     { value: "next", label: "Next.js" },
     { value: "blitz", label: "Blitz.js" },
   ];
+
+  const editNote = async () => {
+    const { data: response } = await api.put(`/post/edit/${note.id}`, {
+      ...note,
+    });
+    if (!response.status) {
+      showNotification({ message: response.message });
+    } else {
+      showNotification({ message: "Note updated sucessfully!!" });
+    }
+  };
+
   return (
     <>
       <Modal opened={opened} onClose={() => setOpened(false)} title="EDIT NOTE">
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            showNotification({
-              title: "Currently Work in Progress",
-              message: "Please try again later",
-              color:"red"
-            });
-            setOpened(false);
+            editNote();
           }}
         >
           <TextInput
@@ -56,7 +65,6 @@ const EditNote = (props: NoteInterface) => {
             name="title"
             value={note.title}
             onChange={(e) => setNote({ ...note, title: e.target.value })}
-            minLength={5}
             my={12}
             sx={{
               paddingBlock: 16,

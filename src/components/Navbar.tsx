@@ -1,40 +1,23 @@
-import { Anchor, Button, Container, Group, Text, Box } from '@mantine/core';
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Photo, MessageCircle, Settings } from 'tabler-icons-react';
+import { Anchor, Button, Container, Group, Text } from "@mantine/core";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../context/AuthContext";
+
 const Navbar = () => {
-  const [isLoggedin, setisLoggedin] = useState(false);
+  const { user, setUser } = useUser();
   const navigate = useNavigate();
 
   const Logout = () => {
-    localStorage.removeItem('xxx-Authorization');
-    setisLoggedin(false);
-    navigate('/login');
+    localStorage.removeItem("authorization");
+    setUser({ isLoggedin: false, username: null });
+    navigate("/login");
   };
 
-  useEffect(() => {
-    if (localStorage.getItem('xxx-Authorization')) {
-      setisLoggedin(true);
-    } else {
-      setisLoggedin(false);
-    }
-  }, []);
   return (
     <Container my={32}>
       <nav>
         <Group position="apart" align="center">
           <div>
-            <Text
-              component={Link}
-              to="/"
-              color="teal"
-              size="xl"
-              mr={10}
-              sx={(theme) => ({
-                fontFamily: `${theme.headings.fontFamily}`,
-                fontWeight: 700,
-              })}
-            >
+            <Text component={Link} to="/" size="xl" weight="bold" mr={10}>
               CloudNotes
             </Text>
             <Anchor component={Link} to="/" p={12} size="md">
@@ -43,35 +26,27 @@ const Navbar = () => {
             <Anchor component={Link} to="/about" p={12} size="md">
               About
             </Anchor>
-            <Anchor component={Link} to="/dashboard" p={12} size="md">
-              Dashboard
-            </Anchor>
           </div>
 
           <div>
             <Group px={12}>
-              {!isLoggedin && (
+              {!user.isLoggedin && (
                 <Button variant="light" component={Link} to="/login">
                   <Text size="md">Login</Text>
                 </Button>
               )}
 
-              {isLoggedin && (
+              {user.isLoggedin && (
                 <>
-                  <Button
-                    component={Link}
-                    to="/profile"
-                    variant="outline"
-                    sx={{
-                      borderRadius: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      aspectRatio: '1/1',
-                    }}
-                  >
-                    <Photo size={20} />
-                  </Button>
+                  <Link to="/profile">
+                    <img
+                      height={32}
+                      width={32}
+                      src={`https://api.dicebear.com/5.x/shapes/svg?seed=${user.username}`}
+                      alt={user.username ?? "User Image"}
+                      style={{ borderRadius: "100%" }}
+                    />
+                  </Link>
 
                   <Button
                     variant="light"

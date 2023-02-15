@@ -1,38 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { NoteInterface, useCustomContext } from "../context/NoteState";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Protected from "../components/Protected";
-import { Badge, Button, Card, Container, Group, Text } from "@mantine/core";
+import { Badge, Container, Group, Text } from "@mantine/core";
+import api from "../utils/api";
 
 const MyNote = () => {
-  const { id: ID } = useParams() as { id: string };
-  const { myNotes, getNotes } = useCustomContext();
+  const { id } = useParams();
 
-  const [currentNote, setCurrentNote] = useState<NoteInterface>({
+  if (!id) {
+    return <div>No Id...</div>;
+  }
+  const [currentNote, setCurrentNote] = useState({
     title: "",
     description: "",
     tag: "",
-    _id: ID,
+    id,
   });
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    if (!myNotes) {
-      //TODO call api for this one note
-      return;
-    }
-    const x = myNotes?.filter((n: NoteInterface) => n._id === ID);
-    if (!x) {
-      setCurrentNote({
-        title: "No Note Found",
-        description: "",
-        _id: ID,
-        tag: "",
-      });
-      return;
-    }
-    setCurrentNote(x[0]);
-  }, [ID]);
-
+    const getNote = async () => {
+      const { data } = await api.get(`/post/get/${id}`);
+      if (data.status) {
+        setCurrentNote(data.data);
+      }
+    };
+    setLoading(true);
+    getNote();
+    setLoading(false);
+  }, []);
+  if (loading) {
+    return <div>loading....</div>;
+  }
   return (
     <Protected>
       <Container>

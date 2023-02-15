@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import {
-  Anchor,
-  Box,
   Button,
   Checkbox,
   Container,
-  Grid,
   Group,
   Paper,
   PasswordInput,
@@ -16,54 +13,32 @@ import {
   Loader,
 } from "@mantine/core";
 import { Alien, At } from "tabler-icons-react";
-
-const HOST: String = import.meta.env.VITE_BACKEND_URL;
+import { useUser } from "../context/AuthContext";
+import { showNotification } from "@mantine/notifications";
+import api from "../utils/api";
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { setUser, user } = useUser();
 
-  useEffect(() => {
-    if (localStorage.getItem("xxx-Authorization")) {
-      navigate("/dashboard");
-    }
-  }, []);
-
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const EMAIL_REGEX =
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (!EMAIL_REGEX.test(credentials.email)) return;
-    if (credentials.password.length < 5) return;
-
-    const response = await fetch(`${HOST}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // email: credentials.email,
-        // password: credentials.password,
-        username: "sanskartrvd",
-        password: "sanskartrvd",
-        email: "sanskartrvd@gmail.com",
-        // name: "newraaaaj",
-        // email: "newraaaaj@gmail.com",
-        // password: "newraaaaj",
-        // username: "newraaaaj",
-      }),
+    const { data: response } = await api.post("/auth/login", {
+      ...credentials,
     });
-    const json = await response.json();
 
-    if (!json.status) {
-      navigate("/login");
+    if (!response.status) {
+      setLoading(false);
+      showNotification({ message: response.message, color: "red" });
     } else {
-      document.cookie = `Authorization=${json.data.token}`;
-      localStorage.setItem("xxx-Authorization", json.data.token);
-      navigate("/dashboard");
+      localStorage.setItem("authorization", response.data.token);
+      setUser({ isLoggedin: true, username: credentials.username });
     }
   };
 
@@ -74,17 +49,13 @@ const Login = () => {
     });
   };
 
+  if (user.isLoggedin) {
+    return <Navigate to="/" replace={true} />;
+  }
+
   return (
     <Container size={420} my={40}>
-      <Title
-        align="center"
-        sx={(theme) => ({
-          fontFamily: theme.headings.fontFamily,
-          fontWeight: 700,
-        })}
-      >
-        Welcome back!
-      </Title>
+      <Title align="center">Welcome back!</Title>
 
       <Text color="dimmed" size="sm" align="center" mt={5}>
         Do not have an account yet?{" "}
@@ -94,15 +65,15 @@ const Login = () => {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form onSubmit={(e) => handleSubmit(e)}>
+        <form onSubmit={handleSubmit}>
           <TextInput
-            label="Email"
-            name="email"
+            label="Username"
+            name="username"
             variant="filled"
             icon={<At />}
             size="md"
             placeholder="name@example.com"
-            value={credentials.email}
+            value={credentials.username}
             onChange={onChange}
             required
           />
@@ -118,11 +89,8 @@ const Login = () => {
             onChange={onChange}
             required
           />
-          <Group position="apart" mt="md">
-            <Checkbox label="Remember me" />
-          </Group>
           <Button fullWidth mt="xl" type="submit">
-            {loading ? <Loader size="sm" color="#ffffff" /> : "Sign in"}
+            {loading ? <Loader size="sm" color="#ffffff" /> : "Log In"}
           </Button>
         </form>
       </Paper>

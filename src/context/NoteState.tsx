@@ -10,7 +10,7 @@ export interface NoteWithoutId {
 }
 
 export interface NoteInterface extends NoteWithoutId {
-  _id: string;
+  id: string;
 }
 
 interface ContextType {
@@ -118,7 +118,7 @@ const NoteState = ({ children }: Props) => {
   // Delete a Note
   const deleteNote = async (id: string) => {
     const newNotes = myNotes?.filter((note) => {
-      return note._id !== id;
+      return note.id !== id;
     });
     setMyNotes(newNotes);
 

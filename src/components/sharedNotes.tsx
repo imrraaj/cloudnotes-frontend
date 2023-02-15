@@ -20,7 +20,7 @@ function useDebounceValue(value: string, time = 250) {
   return debValue;
 }
 
-const ShowNotes = () => {
+const SharedNotes = () => {
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [notes, setNotes] = useState<NoteInterface[]>([]);
@@ -30,11 +30,12 @@ const ShowNotes = () => {
 
   useEffect(() => {
     async function callPost() {
-      const { data: response } = await api.get("/post/all");
+      const { data: response } = await api.get("/post/shared-with-me");
 
       if (!response.status) {
         showNotification({ message: response.message, color: "red" });
       } else {
+        console.log(response.data);
         setNotes(response.data);
       }
     }
@@ -47,7 +48,6 @@ const ShowNotes = () => {
   }, []);
 
   useEffect(() => {
-    console.log("making change");
     if (debouncedValue) {
       const n = notes.filter(
         (note) =>
@@ -90,7 +90,7 @@ const ShowNotes = () => {
             queriednotes?.map((noteItem) => {
               return (
                 <Grid.Col key={noteItem.title}>
-                  <Note {...noteItem} />
+                  <SharedNoteItem {...noteItem} />
                 </Grid.Col>
               );
             })}
@@ -99,7 +99,7 @@ const ShowNotes = () => {
             notes?.map((noteItem) => {
               return (
                 <Grid.Col key={noteItem.title}>
-                  <Note {...noteItem} />
+                  <SharedNoteItem {...noteItem} />
                 </Grid.Col>
               );
             })}
@@ -109,4 +109,39 @@ const ShowNotes = () => {
   );
 };
 
-export default ShowNotes;
+export default SharedNotes;
+
+import { Badge, Box, Card, Group } from "@mantine/core";
+import { Link } from "react-router-dom";
+
+const SharedNoteItem = (props: NoteInterface) => {
+  return (
+    <Card shadow="sm" p="lg">
+      <Group position="apart" align="stretch">
+        <Text weight={600} size="xl">
+          {props.title.slice(0, 30)} {props.title.length > 30 ? "..." : ""}
+        </Text>
+        <Badge
+          color="teal"
+          variant={props.tag === "Important" ? "filled" : "dot"}
+        >
+          {props.tag}
+        </Badge>
+      </Group>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
+          gap: "1em",
+        }}
+        mt={16}
+      >
+        <Text component={Link} to={"/note/" + props.id} color="teal" size="sm">
+          Read More
+        </Text>
+      </Box>
+    </Card>
+  );
+};
