@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "https://cloud-backend-eics.onrender.com/",
     headers: {
         Authorization: localStorage.getItem('authorization'),
     }
