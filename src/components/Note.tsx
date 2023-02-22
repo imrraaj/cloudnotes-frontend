@@ -76,6 +76,7 @@ import { useState } from "react";
 import { TextInput, Loader, Input } from "@mantine/core";
 import { Radio } from "@mantine/core";
 import { Button } from "@mantine/core";
+import { useEffect } from "react";
 
 const ShareNote = (props: NoteInterface) => {
   const [opened, setOpened] = useState(false);
@@ -83,6 +84,7 @@ const ShareNote = (props: NoteInterface) => {
   const [shareOrUnshare, setShareOrUnshare] = useState("");
 
   const [username, setUsername] = useState("");
+  const [users, setUsers] = useState([""]);
 
   const editNote = async () => {
     if (shareOrUnshare === "share") {
@@ -111,6 +113,19 @@ const ShareNote = (props: NoteInterface) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    async function getPostInfo() {
+      const postId = props.id;
+
+      const { data } = await api.post("/post/shared-post-info", {
+        postId,
+      });
+      setUsers(data.data);
+    }
+
+    opened && getPostInfo();
+  }, [opened]);
 
   return (
     <>
@@ -176,6 +191,13 @@ const ShareNote = (props: NoteInterface) => {
           >
             {loading ? <Loader size="sm" color="#ffffff" /> : "Add User"}
           </Button>
+
+          {users.length > 0 && (
+            <>
+              <Text mt="lg">Post is shared with following users:</Text>
+              <ul>{users && users.map((usr) => <li key={usr}>{usr}</li>)}</ul>
+            </>
+          )}
         </form>
       </Modal>
 

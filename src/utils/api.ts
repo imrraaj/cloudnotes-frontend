@@ -1,8 +1,12 @@
 import axios from "axios";
-
-export default axios.create({
+const api = axios.create({
     baseURL: "https://cloud-backend-eics.onrender.com/",
-    headers: {
-        Authorization: localStorage.getItem('authorization'),
-    }
 })
+api.interceptors.request.use(function (config) {
+    config.headers.Authorization = localStorage.getItem('authorization');
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+});
+
+export default api;
