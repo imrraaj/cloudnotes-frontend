@@ -1,6 +1,13 @@
 import axios from "axios";
+
+
+let baseURL = "http://localhost:5000";
+
+if (process.env.NODE_ENV === 'production') {
+    baseURL = "https://cloud-backend-eics.onrender.com/";
+}
 const api = axios.create({
-    baseURL: "https://cloud-backend-eics.onrender.com/",
+    baseURL,
 })
 api.interceptors.request.use(function (config) {
     config.headers.Authorization = localStorage.getItem('authorization');

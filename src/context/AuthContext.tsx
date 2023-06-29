@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { useContext, createContext, useState } from "react";
+import api from "../utils/api";
 
 type User = {
   isLoggedin: boolean;
@@ -22,15 +23,15 @@ function AuthenticationProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setisLoading] = useState(false);
 
   async function verifyUser(token: string) {
-    const res = await fetch("http://localhost:5000/auth/verify-user", {
-      method: "GET",
+    // axios
+    const res_ = await api.get("/auth/verify-user", {
       headers: {
-        authorization: token,
+        Authorization: token,
       },
     });
-    const response = await res.json();
-    if (response.status) {
-      setUser({ isLoggedin: true, username: response.data.username });
+
+    if (res_.data.status) {
+      setUser({ isLoggedin: true, username: res_.data.username });
     }
   }
 
